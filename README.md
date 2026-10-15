@@ -1,64 +1,91 @@
 # HTML Frontmatter
 
-让 HTML 笔记使用 Obsidian 原生 Properties：编辑属性、查看全库属性目录与统计。属性保存在 HTML 自身的 JSON 数据块中，不生成辅助 Markdown，也不依赖第三方 HTML 插件。
+English · [简体中文](README.zh-CN.md)
 
-**0.1.0 试用版 · 仅支持桌面 Obsidian 1.14.4，已在 Windows 验证。**
+Edit properties of HTML notes using Obsidian's native Properties interface, and include HTML properties in the vault-wide property catalog and occurrence counts. Metadata stays inside each HTML file as a JSON data block. No companion Markdown files or third-party HTML plugins are required.
 
-> **Vibe coding 产物**：本项目主要通过人机协作、AI 辅助编码开发。已完成下文链接中记录的实际验证，覆盖范围和已知限制也一并公开；当前仍是试用版。
+**Preview release. Supports desktop Obsidian 1.14.4 only; verified on Windows.**
 
-## 功能
+> **Vibe-coded project:** Developed through human–AI collaboration and AI-assisted coding. The [verification record](docs/prototype-verification.md) documents the actual checks and their limits. This project is still a preview.
 
-- 通过原生文件属性侧栏编辑文本、列表、数字、复选框、日期、日期时间和标签。
-- 支持单文件属性新增、改名、删除；保存时保留 JSON 数据块之外的正文、样式和脚本。
-- HTML、HTM 与 Markdown 的属性合并进入原生全库目录、出现次数和候选值读取。
-- 文件修改、移动、删除或排除规则变化后刷新目录；类型选择在重启后保留。
+## Features
 
-![真实操作演示：选择 HTML、编辑原生属性、新属性自动进入全库统计](docs/assets/demo.gif)
+- Edit text, lists, numbers, checkboxes, dates, date-times, and tags with native property controls.
+- Add, rename, and delete properties within a single HTML file.
+- Preserve all HTML content, styles, and scripts outside the metadata block when saving properties.
+- Include HTML, HTM, and Markdown properties in the native vault-wide catalog, occurrence counts, and property-value suggestions.
+- Refresh the catalog after file changes, moves, deletions, or changes to excluded-file rules.
 
-演示使用合成笔记：右侧编辑 HTML 的完成状态和标签，新增“复习计划”后，左侧全库属性目录自动出现该属性，计数为 1。
+![Select an HTML note, edit native properties, and see a new property appear in the vault-wide catalog](docs/assets/demo.gif)
 
-## 安装与使用
+The GIF uses synthetic notes. The native property editor is on the right; the vault-wide catalog is on the left. Adding “复习计划” (Review plan) to an HTML note creates a catalog entry with an occurrence count of 1.
 
-1. 下载并解压 [html-frontmatter-0.1.0.zip](https://github.com/THhapp/obsidian-html-frontmatter/releases/download/0.1.0/html-frontmatter-0.1.0.zip)，将其中整个 `html-frontmatter` 文件夹放入目标库的 `.obsidian/plugins/`。
-2. 重启 Obsidian，在“设置 → 社区插件”中启用 **HTML Frontmatter**，并启用核心插件“属性列表”。
-3. 按 `Ctrl/Cmd+P`，运行 **HTML Frontmatter: 编辑 HTML 属性**，选择 `.html/.htm` 文件；也可使用文件右键菜单“编辑 HTML 属性”。
-4. 查看全库目录时，运行内置命令 **属性列表: 显示所有笔记属性**。
+## Installation
 
-无需 Node.js 即可安装构建好的插件。属性侧栏固定到所选文件，正文阅读使用你自己的现有方式。
+### Manual installation
 
-## 属性如何保存
+Until the plugin is available in Obsidian's community directory, install it manually:
+
+1. Open the [latest GitHub release](https://github.com/THhapp/obsidian-html-frontmatter/releases/latest) and download the `html-frontmatter-<version>.zip` asset.
+2. Extract the ZIP. Copy the entire `html-frontmatter` folder into your vault's `.obsidian/plugins/` directory. The resulting plugin folder must be `.obsidian/plugins/html-frontmatter/`, with `main.js` and `manifest.json` directly inside it.
+3. Restart Obsidian. Open **Settings → Community plugins**, allow community plugins if prompted, and enable **HTML Frontmatter**.
+4. Open **Settings → Core plugins** and enable **Properties view**.
+
+Alternatively, create `.obsidian/plugins/html-frontmatter/` and place the release's standalone `main.js` and `manifest.json` files inside it. License notices are embedded in `main.js` and also provided as separate release files. Node.js is not required to use the installed plugin.
+
+## Usage
+
+### Edit an HTML note's properties
+
+1. Place an `.html` or `.htm` file inside your vault.
+2. Open the command palette with **Ctrl+P** on Windows/Linux or **Cmd+P** on macOS.
+3. Search for **HTML Frontmatter** and run **HTML Frontmatter: 编辑 HTML 属性** (“Edit HTML properties”). The plugin's command and file-menu labels are currently in Chinese.
+4. Select the HTML file. Its properties open in the native file-properties sidebar.
+5. Edit values, toggle checkboxes, or add properties. Changes are saved to the JSON metadata block inside that HTML file.
+
+You can also right-click an HTML file in the file explorer and choose **编辑 HTML 属性**. The property pane stays pinned to the selected file. Read the HTML body using your existing preferred method; this plugin does not render it.
+
+### View properties across the vault
+
+Run Obsidian's **Show all properties** command to open the native vault-wide property catalog. HTML and Markdown notes contribute to the displayed property names and occurrence counts. A property used by one HTML note has an occurrence count of 1.
+
+## Metadata format
+
+There is no need to maintain JSON manually. If a file has no metadata block, saving its first property inserts one:
 
 ```html
 <script type="application/json" id="obsidian-frontmatter">
 {
-  "课程": "数据库",
-  "章节": 6,
-  "完成": false,
-  "tags": ["课程/数据库"]
+  "course": "Databases",
+  "chapter": 6,
+  "reviewed": false,
+  "tags": ["course/databases"]
 }
 </script>
 ```
 
-通过属性面板编辑即可，无需手工维护 JSON。没有数据块时，首次保存会插入一个块。支持扁平对象及基础值列表；`tags`、`aliases`、`cssclasses` 使用字符串列表。无效、重复或不受支持的数据块会拒绝写入。
+The block is non-executing JSON. Flat objects and lists of primitive values are supported; `tags`, `aliases`, and `cssclasses` must be string lists. Invalid, duplicate, or unsupported metadata blocks are refused rather than overwritten.
 
-## 当前限制
+## Limitations
 
-- 使用了部分非公开接口，其他 Obsidian 版本会拒绝加载。
-- 涉及 HTML 的**全局属性改名和删除暂时阻止**，包括原生目录的混合批量删除；单文件面板仍可操作。
-- 不提供 HTML 正文阅读、搜索、图谱、Bases 或反链适配。点击目录项仍进入原生搜索，其结果不承诺包含 HTML。
-- 显式指定过类型的属性可能按原生规则以 0 次保留；日期时间按原生格式补齐秒数。
+- The adapter uses some non-public APIs and refuses to load on Obsidian versions other than 1.14.4.
+- Vault-wide property renaming or deletion involving HTML is blocked, including mixed multi-selections. Single-file property renaming and deletion remain available.
+- HTML rendering, search results, graph links, Bases, and backlinks are outside this plugin's scope. Clicking a catalog entry still invokes native search; its results are not guaranteed to include HTML.
+- Explicitly assigned property types may remain in the native catalog with a count of 0. Date-times use Obsidian's native format, including seconds.
 
-## 从源码构建
+## Build from source
 
-需要 Node.js 24 与 npm；当前打包命令使用 Windows PowerShell。
+Use Node.js 24 and npm. The release-packaging command currently requires Windows PowerShell:
 
 ```powershell
 npm ci --ignore-scripts --no-audit --no-fund
 npm run release
 ```
 
-输出：`dist/html-frontmatter/` 可直接安装，`dist/html-frontmatter-0.1.0.zip` 可分发，旁边的 `.sha256` 文件用于校验。[GitHub Release](https://github.com/THhapp/obsidian-html-frontmatter/releases) 同时提供独立 `main.js`、`manifest.json` 和许可文件；不将 `dist/`、`node_modules/` 或测试库提交到源码仓库。
+The installable folder, ZIP, and SHA-256 file are generated under `dist/`. Build output, dependencies, and test-vault state are excluded from the source repository.
 
-[开发与必要检查](docs/development.md) · [验证记录](docs/prototype-verification.md) · [架构说明](docs/frontmatter-architecture.md) · [更新记录](CHANGELOG.md)
+[Development](docs/development.md) · [Verification record](docs/prototype-verification.md) · [Architecture](docs/frontmatter-architecture.md) · [Changelog](CHANGELOG.md)
 
-本项目采用 [MIT 许可证](LICENSE)。捆绑依赖的许可证保留在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+## License
+
+[MIT](LICENSE). Bundled dependencies retain their own notices in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Detailed development documents are currently in Simplified Chinese.
