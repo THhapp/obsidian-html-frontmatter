@@ -1,6 +1,13 @@
 # HTML 属性原型验证记录
 
-验证日期：2026-10-15。记录覆盖本项目 0.0.1 原型的功能验证与 0.1.0 试用版的安装交付检查，环境为 Windows 桌面版 Obsidian 1.14.4。
+初始验证日期：2026-10-15。记录覆盖本项目 0.0.1 原型的功能验证、0.1.0 试用版的安装交付检查及后续版本的针对性检查，环境为 Windows 桌面版 Obsidian 1.14.4。
+
+## 0.1.2 类型警告修复检查（2026-10-16）
+
+- `npm run check` 与构建通过；`npm test` 的现有 15 个测试通过。
+- 本地使用启用类型信息的 typescript-eslint 检查全部 `src/**/*.ts`：`no-explicit-any`、`no-unsafe-assignment`、`no-unsafe-member-access`、`no-unsafe-argument`、`no-unsafe-call`、`no-unsafe-return`、`no-unnecessary-type-assertion` 均无警告或错误。临时检查工具在忽略的 `tmp/lint/` 下，没有新增项目依赖或关闭规则。
+- 将 0.1.2 构建部署到项目独立测试库，重启独立 Obsidian 1.14.4 实例后，`npm run test:live` 的 14 项与 `npm run test:catalog` 的 13 项检查通过，覆盖原生属性编辑、精确保存、目录统计、忽略规则、全局操作保护及停用/恢复。
+- 本轮没有重复扩展类型和重启持久化套件；下文相关结果属于之前记录的版本。未修改日常笔记库。社区目录是否还有其他警告，以发布后的扫描为准。
 
 ## 结论
 

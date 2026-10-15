@@ -48,26 +48,25 @@ export class PropertyCatalog {
           }
         }
       }));
-      for (const [target, name] of [
-        [this.manager, 'rebuildProperties'],
-        [this.manager, 'getPropertyOccurrences'],
-        [this.cache, 'getFrontmatterPropertyValuesForKey'],
-      ] as const) {
-        this.restorers.push(wrapMethod(target, name, (receiver, original, args) => {
-          this.depth++;
-          try { return original.apply(receiver, args); }
-          finally { this.depth--; }
-        }));
-      }
+      this.restorers.push(wrapMethod(this.manager, 'rebuildProperties', (receiver, original, args) =>
+        this.withHtmlEntries(() => original.apply(receiver, args))));
+      this.restorers.push(wrapMethod(this.manager, 'getPropertyOccurrences', (receiver, original, args) =>
+        this.withHtmlEntries(() => original.apply(receiver, args))));
+      this.restorers.push(wrapMethod(this.cache, 'getFrontmatterPropertyValuesForKey', (receiver, original, args) =>
+        this.withHtmlEntries(() => original.apply(receiver, args))));
       // The manager registered its original rebuild function as an event listener
       // before plugin load. Wrapping the method alone cannot reach that callback.
       this.restorers.push(wrapMethod(this.manager, 'trigger', (receiver, original, args) => {
         if (args[0] !== 'changed') return original.apply(receiver, args);
-        this.depth++;
-        try { return original.apply(receiver, args); }
-        finally { this.depth--; }
+        return this.withHtmlEntries(() => original.apply(receiver, args));
       }));
     } catch (error) { this.dispose(); throw error; }
+  }
+
+  private withHtmlEntries<T>(run: () => T): T {
+    this.depth++;
+    try { return run(); }
+    finally { this.depth--; }
   }
 
   refresh(): void {

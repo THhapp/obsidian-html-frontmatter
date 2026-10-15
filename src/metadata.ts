@@ -1,4 +1,5 @@
 import { parse } from 'parse5';
+import type { DefaultTreeAdapterTypes } from 'parse5';
 
 export const METADATA_ID = 'obsidian-frontmatter';
 export type PropertyValue = string | number | boolean | null | (string | number | boolean | null)[];
@@ -22,7 +23,7 @@ export function validateProperties(value: unknown): Properties {
   }
   const scalar = (item: unknown) => item === null || typeof item === 'string' || typeof item === 'boolean'
     || (typeof item === 'number' && Number.isFinite(item));
-  for (const [key, item] of Object.entries(value)) {
+  for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
     if (!key || ['__proto__', 'constructor', 'prototype'].includes(key)) throw new Error(`不支持的属性名：${key}`);
     if (!(scalar(item) || (Array.isArray(item) && item.every(scalar)))) throw new Error(`不支持的属性值：${key}`);
     if (['tags', 'aliases', 'cssclasses'].includes(key) && !(Array.isArray(item) && item.every((v) => typeof v === 'string'))) {
@@ -34,22 +35,25 @@ export function validateProperties(value: unknown): Properties {
 
 export function readMetadata(source: string): MetadataDocument {
   const tree = parse(source, { sourceCodeLocationInfo: true });
-  const matches: { node: any; parent: any }[] = [];
+  const matches: DefaultTreeAdapterTypes.Element[] = [];
   let insertionOffset = 0;
-  function walk(node: any, parent: any = null): void {
+  function walk(node: DefaultTreeAdapterTypes.Node): void {
     const location = node.sourceCodeLocation;
     if (node.nodeName === '#documentType' && location) insertionOffset = Math.max(insertionOffset, location.endOffset);
-    if (node.tagName === 'html' && location?.startTag) insertionOffset = Math.max(insertionOffset, location.startTag.endOffset);
-    if (node.tagName === 'head' && location?.startTag) insertionOffset = Math.max(insertionOffset, location.startTag.endOffset);
-    if (node.tagName === 'script' && node.attrs?.some((a: any) => a.name === 'id' && a.value === METADATA_ID)) matches.push({ node, parent });
-    for (const child of node.childNodes ?? []) walk(child, node);
+    if ('tagName' in node) {
+      const location = node.sourceCodeLocation;
+      if (node.tagName === 'html' && location?.startTag) insertionOffset = Math.max(insertionOffset, location.startTag.endOffset);
+      if (node.tagName === 'head' && location?.startTag) insertionOffset = Math.max(insertionOffset, location.startTag.endOffset);
+      if (node.tagName === 'script' && node.attrs.some((attribute) => attribute.name === 'id' && attribute.value === METADATA_ID)) matches.push(node);
+    }
+    if ('childNodes' in node) for (const child of node.childNodes) walk(child);
     // Template contents are not active document metadata.
   }
   walk(tree);
   if (matches.length > 1) throw new Error('发现重复的 HTML 属性数据块，已停止写入。');
   if (!matches.length) return { properties: {}, region: null, insertionOffset };
-  const node = matches[0].node;
-  const type = node.attrs.find((a: any) => a.name === 'type')?.value.toLowerCase();
+  const node = matches[0];
+  const type = node.attrs.find((attribute) => attribute.name === 'type')?.value.toLowerCase();
   const location = node.sourceCodeLocation;
   if (type !== 'application/json' || !location?.startTag || !location?.endTag) throw new Error('HTML 属性数据块类型或结束标签不正确。');
   const content = source.slice(location.startTag.endOffset, location.endTag.startOffset);

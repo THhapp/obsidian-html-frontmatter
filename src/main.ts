@@ -2,10 +2,9 @@ import { Plugin, TFile, Notice, FuzzySuggestModal, apiVersion } from 'obsidian';
 import type { App, CachedMetadata } from 'obsidian';
 import { applyChanges, diffProperties, readMetadata, validateProperties, writeMetadata } from './metadata.ts';
 import type { Properties, PropertyChange } from './metadata.ts';
-import { isPropertiesView, isAllPropertiesView, wrapMethod } from './compat.ts';
-import type { PropertiesView, AllPropertiesView, PropertyRow } from './compat.ts';
+import { getPropertiesInternals, isPropertiesView, isAllPropertiesView, wrapMethod } from './compat.ts';
+import type { PropertiesView, AllPropertiesView } from './compat.ts';
 import { PropertyCatalog } from './property-catalog.ts';
-import type { PropertyCache, PropertyTypeManager } from './property-catalog.ts';
 
 const isHtml = (file: unknown): file is TFile => file instanceof TFile && /^(html|htm)$/i.test(file.extension);
 type Snapshot = { properties: Properties; error?: undefined } | { properties?: undefined; error: string };
@@ -40,6 +39,7 @@ export default class HtmlFrontmatterPlugin extends Plugin {
     if (apiVersion !== '1.14.4') throw new Error(`实验版仅验证 Obsidian 1.14.4，当前为 ${apiVersion}。`);
     this.active = true;
     try {
+      const native = getPropertiesInternals(this.app);
       this.installFileGuards();
       this.registerEvent(this.app.workspace.on('file-menu', (menu, file) => {
         if (isHtml(file)) menu.addItem((item) => item.setTitle('编辑 HTML 属性').setIcon('lucide-info').onClick(() => {
@@ -56,7 +56,7 @@ export default class HtmlFrontmatterPlugin extends Plugin {
         this.invalidate(oldPath);
         if (isHtml(file)) this.scheduleIndex(file);
       }));
-      this.registerEvent((this.app.vault as any).on('config-changed', (key: string) => {
+      this.registerEvent(native.vault.on('config-changed', (key) => {
         if (key === 'userIgnoreFilters') this.requestCatalogRefresh();
       }));
       this.registerEvent(this.app.workspace.on('layout-change', () => this.attachExistingPanels()));
@@ -66,8 +66,7 @@ export default class HtmlFrontmatterPlugin extends Plugin {
         if (snapshot?.properties) return { frontmatter: validateProperties(snapshot.properties) } satisfies CachedMetadata;
         return original.call(receiver, path);
       }));
-      const manager = (this.app as any).metadataTypeManager as PropertyTypeManager;
-      this.catalog = new PropertyCatalog(this.app.metadataCache as unknown as PropertyCache, manager, () =>
+      this.catalog = new PropertyCatalog(native.metadataCache, native.metadataTypeManager, () =>
         [...this.snapshots].flatMap(([path, snapshot]) => snapshot.properties && this.app.vault.getFileByPath(path)
           ? [[path, snapshot.properties] as const] : []),
       );
@@ -81,8 +80,9 @@ export default class HtmlFrontmatterPlugin extends Plugin {
   }
 
   private installFileGuards(): void {
-    for (const name of ['renameProperty', 'deleteProperty']) {
-      this.restorers.push(wrapMethod(this.app.fileManager, name, (receiver, original, args) => {
+    const { fileManager } = getPropertiesInternals(this.app);
+    for (const name of ['renameProperty', 'deleteProperty'] as const) {
+      this.restorers.push(wrapMethod(fileManager, name, (receiver, original, args) => {
         const property = String(args[0]).toLowerCase();
         if (this.hasHtmlProperty(property)) {
           const message = '实验版暂不支持涉及 HTML 的全局属性重命名或删除。请在单文件属性面板中操作。';
@@ -92,7 +92,7 @@ export default class HtmlFrontmatterPlugin extends Plugin {
         return original.apply(receiver, args);
       }));
     }
-    this.restorers.push(wrapMethod(this.app.fileManager, 'processFrontMatter', (receiver, original, [file, callback, options]) => {
+    this.restorers.push(wrapMethod(fileManager, 'processFrontMatter', (receiver, original, [file, callback, options]) => {
       if (!isHtml(file)) return original.call(receiver, file, callback, options);
       return this.enqueue(file, (source) => {
         const properties = readMetadata(source).properties;
@@ -188,7 +188,7 @@ export default class HtmlFrontmatterPlugin extends Plugin {
       const view = leaf.view;
       if (!isAllPropertiesView(view) || this.globalPanels.has(view)) continue;
       this.globalPanels.set(view, wrapMethod(view, 'deleteProperty', (receiver, original, args) => {
-        const row = args[0] as PropertyRow;
+        const [row] = args;
         // The native context menu loops through deleteProperty() per selected row.
         // Preflight the entire selection before its first Markdown-only row writes.
         if ([row, ...view.tree.selectedDoms].some((item) => this.hasHtmlProperty(item.property.name))) {
@@ -259,7 +259,7 @@ export default class HtmlFrontmatterPlugin extends Plugin {
 
   async openProperties(file: TFile): Promise<void> {
     if (!this.active || !isHtml(file)) throw new Error('请选择 HTML 文件。');
-    const core = (this.app as any).internalPlugins.getEnabledPluginById('properties');
+    const core = getPropertiesInternals(this.app).internalPlugins.getEnabledPluginById('properties');
     if (!core) throw new Error('请先启用 Obsidian 内置的 Properties 核心功能。');
     const source = await this.app.vault.read(file);
     readMetadata(source); // Refuse invalid data before opening an editable panel.
@@ -273,7 +273,7 @@ export default class HtmlFrontmatterPlugin extends Plugin {
     this.attachPanel(leaf.view);
     leaf.setPinned(true);
     await leaf.setViewState({ type: 'file-properties', state: { file: file.path } });
-    await this.refreshPanel(leaf.view as PropertiesView, file);
+    await this.refreshPanel(leaf.view, file);
     await this.app.workspace.revealLeaf(leaf);
   }
 

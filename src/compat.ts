@@ -1,5 +1,26 @@
-import type { ItemView, TFile, View } from 'obsidian';
+import type { App, DataWriteOptions, EventRef, ItemView, TFile, View } from 'obsidian';
 import type { Properties } from './metadata.ts';
+import type { PropertyCache, PropertyTypeManager } from './property-catalog.ts';
+
+interface PropertyFileManager {
+  renameProperty(name: string, newName: string): Promise<void>;
+  deleteProperty(name: string): Promise<void>;
+  processFrontMatter(file: TFile, callback: (properties: Properties) => void, options?: DataWriteOptions): Promise<void>;
+}
+
+interface PropertiesInternals {
+  metadataCache: PropertyCache;
+  metadataTypeManager: PropertyTypeManager;
+  fileManager: PropertyFileManager;
+  vault: { on(event: 'config-changed', callback: (key: string) => void): EventRef };
+  internalPlugins: { getEnabledPluginById(id: string): unknown };
+}
+
+// Version-specific native interfaces, checked against Obsidian 1.14.4.
+// Keep assertions for non-public APIs inside this compatibility boundary.
+export function getPropertiesInternals(app: App): PropertiesInternals {
+  return app as unknown as PropertiesInternals;
+}
 
 export interface PropertiesView extends ItemView {
   file: TFile | null;
@@ -25,24 +46,33 @@ export function isAllPropertiesView(view: View): view is AllPropertiesView {
     && candidate.tree?.selectedDoms instanceof Set;
 }
 
-// All untyped native method wrapping is kept at this compatibility boundary.
-type Method = (...args: any[]) => any;
-export function wrapMethod(target: any, name: string, handler: (receiver: any, original: Method, args: any[]) => any): () => void {
-  const original = target[name];
-  if (typeof original !== 'function') throw new Error(`Obsidian 接口不匹配：${name}`);
+type Method = (...args: never[]) => unknown;
+type MethodKeys<T> = { [K in keyof T]-?: T[K] extends Method ? K : never }[keyof T];
+type NativeMethod<T, K extends keyof T> = Extract<T[K], Method>;
+type WrappedMethod<T, K extends keyof T> = (this: T, ...args: Parameters<NativeMethod<T, K>>) => ReturnType<NativeMethod<T, K>>;
+
+// Preserve each native method's receiver, argument tuple and return type.
+export function wrapMethod<T extends object, K extends MethodKeys<T>>(
+  target: T,
+  name: K,
+  handler: (receiver: T, original: WrappedMethod<T, K>, args: Parameters<NativeMethod<T, K>>) => ReturnType<NativeMethod<T, K>>,
+): () => void {
+  const method = target[name];
+  if (typeof method !== 'function') throw new Error(`Obsidian 接口不匹配：${String(name)}`);
+  const original = method as WrappedMethod<T, K>;
   let enabled = true;
-  function replacement(this: any, ...args: any[]): any {
+  function replacement(this: T, ...args: Parameters<NativeMethod<T, K>>): ReturnType<NativeMethod<T, K>> {
     return enabled ? handler(this, original, args) : original.apply(this, args);
   }
-  target[name] = replacement;
+  target[name] = replacement as T[K];
   return () => {
     enabled = false;
-    if (target[name] === replacement) target[name] = original;
+    if (target[name] === replacement) target[name] = method;
   };
 }
 
 export function isPropertiesView(view: View): view is PropertiesView {
   const candidate = view as Partial<PropertiesView>;
-  return view.getViewType() === 'file-properties' && ['isSupportedFile', 'updateFrontmatter', 'saveFrontmatter', 'requestUpdate', 'update']
-    .every((key) => typeof (candidate as any)[key] === 'function');
+  const methods = ['isSupportedFile', 'updateFrontmatter', 'saveFrontmatter', 'requestUpdate', 'update'] as const;
+  return view.getViewType() === 'file-properties' && methods.every((key) => typeof candidate[key] === 'function');
 }
