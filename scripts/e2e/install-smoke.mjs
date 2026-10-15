@@ -17,7 +17,7 @@ try {
   assert.equal(path.resolve(actual.path), vault);
   assert.deepEqual(actual.plugins, ['html-frontmatter']);
   assert.equal(actual.version, manifest.version);
-  for (const name of ['main.js', 'manifest.json', 'README.md', 'THIRD_PARTY_NOTICES.md']) {
+  for (const name of ['main.js', 'manifest.json', 'README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md']) {
     assert.equal(await hash(path.join(vault, '.obsidian/plugins/html-frontmatter', name)), await hash(path.join(root, 'dist/html-frontmatter', name)));
   }
   const file = path.join(vault, 'sample.html');

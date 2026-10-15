@@ -21,7 +21,7 @@ $noticePath = Join-Path $projectRoot 'THIRD_PARTY_NOTICES.md'
 
 $dist = Join-Path $projectRoot 'dist'
 $pluginDirectory = Join-Path $dist $manifest.id
-$files = @('main.js', 'manifest.json', 'README.md', 'THIRD_PARTY_NOTICES.md')
+$files = @('main.js', 'manifest.json', 'README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md')
 if (Test-Path -LiteralPath $pluginDirectory) {
     foreach ($item in Get-ChildItem -LiteralPath $pluginDirectory -Force -Recurse) {
         if ($item.PSIsContainer -or $item.DirectoryName -ne $pluginDirectory -or $item.Name -notin $files) {
@@ -30,11 +30,13 @@ if (Test-Path -LiteralPath $pluginDirectory) {
     }
 }
 New-Item -ItemType Directory -Path $pluginDirectory -Force | Out-Null
-foreach ($name in @('main.js', 'manifest.json', 'THIRD_PARTY_NOTICES.md')) {
+foreach ($name in @('main.js', 'manifest.json', 'LICENSE', 'THIRD_PARTY_NOTICES.md')) {
     Copy-Item -LiteralPath (Join-Path $projectRoot $name) -Destination (Join-Path $pluginDirectory $name) -Force
 }
 $install = @"
 # HTML Frontmatter $($manifest.version)
+
+Vibe-coded preview: developed through human-AI collaboration and AI-assisted coding.
 
 Copy this entire html-frontmatter folder into your vault's .obsidian/plugins/ folder.
 Restart Obsidian and enable HTML Frontmatter in Community plugins.
@@ -42,7 +44,7 @@ Open the command palette, search for HTML Frontmatter and choose an HTML/HTM fil
 
 This preview supports desktop Obsidian 1.14.4 only. HTML rendering, search and graph support are not included.
 Global rename/delete involving HTML are blocked; edit those properties in the single-file panel.
-The project has not yet specified a source-code license. Third-party notices are included separately.
+Released under the MIT License. See LICENSE and THIRD_PARTY_NOTICES.md.
 "@
 [IO.File]::WriteAllText((Join-Path $pluginDirectory 'README.md'), $install, $utf8)
 $archiveName = "html-frontmatter-$($manifest.version).zip"

@@ -4,6 +4,8 @@
 
 **0.1.0 试用版 · 仅支持桌面 Obsidian 1.14.4，已在 Windows 验证。**
 
+> **Vibe coding 产物**：本项目主要通过人机协作、AI 辅助编码开发。已完成下文链接中记录的实际验证，覆盖范围和已知限制也一并公开；当前仍是试用版。
+
 ## 功能
 
 - 通过原生文件属性侧栏编辑文本、列表、数字、复选框、日期、日期时间和标签。
@@ -15,7 +17,7 @@
 
 ## 安装与使用
 
-1. 解压 `html-frontmatter-0.1.0.zip`，将其中整个 `html-frontmatter` 文件夹放入目标库的 `.obsidian/plugins/`。
+1. 下载并解压 [html-frontmatter-0.1.0.zip](https://github.com/THhapp/obsidian-html-frontmatter/releases/download/0.1.0/html-frontmatter-0.1.0.zip)，将其中整个 `html-frontmatter` 文件夹放入目标库的 `.obsidian/plugins/`。
 2. 重启 Obsidian，在“设置 → 社区插件”中启用 **HTML Frontmatter**，并启用核心插件“属性列表”。
 3. 按 `Ctrl/Cmd+P`，运行 **HTML Frontmatter: 编辑 HTML 属性**，选择 `.html/.htm` 文件；也可使用文件右键菜单“编辑 HTML 属性”。
 4. 查看全库目录时，运行内置命令 **属性列表: 显示所有笔记属性**。
@@ -53,8 +55,8 @@ npm ci --ignore-scripts --no-audit --no-fund
 npm run release
 ```
 
-输出：`dist/html-frontmatter/` 可直接安装，`dist/html-frontmatter-0.1.0.zip` 可分发，旁边的 `.sha256` 文件用于校验。GitHub 上传时，源码正常推送；安装包作为 Release 附件上传，不提交 `dist/`、`node_modules/` 或测试库。
+输出：`dist/html-frontmatter/` 可直接安装，`dist/html-frontmatter-0.1.0.zip` 可分发，旁边的 `.sha256` 文件用于校验。[GitHub Release](https://github.com/THhapp/obsidian-html-frontmatter/releases) 同时提供独立 `main.js`、`manifest.json` 和许可文件；不将 `dist/`、`node_modules/` 或测试库提交到源码仓库。
 
 [开发与必要检查](docs/development.md) · [验证记录](docs/prototype-verification.md) · [架构说明](docs/frontmatter-architecture.md) · [更新记录](CHANGELOG.md)
 
-项目源码的开源许可证尚未指定。捆绑依赖的许可证保留在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+本项目采用 [MIT 许可证](LICENSE)。捆绑依赖的许可证保留在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

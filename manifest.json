@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "minAppVersion": "1.14.4",
   "description": "Edit HTML metadata with native Properties and include it in the vault property catalog.",
-  "author": "HTML Frontmatter contributors",
+  "author": "THhapp",
+  "authorUrl": "https://github.com/THhapp",
   "isDesktopOnly": true
 }
