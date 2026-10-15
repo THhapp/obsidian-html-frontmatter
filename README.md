@@ -84,7 +84,7 @@ npm run release
 
 The installable folder, ZIP, and SHA-256 file are generated under `dist/`. Build output, dependencies, and test-vault state are excluded from the source repository.
 
-[Development](docs/development.md) · [Verification record](docs/prototype-verification.md) · [Architecture](docs/frontmatter-architecture.md) · [Changelog](CHANGELOG.md)
+[Documentation index](docs/README.md) · [Development](docs/development.md) · [Verification record](docs/prototype-verification.md) · [Architecture](docs/frontmatter-architecture.md) · [Changelog](CHANGELOG.md)
 
 ## License
 

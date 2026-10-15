@@ -1,8 +1,8 @@
 # HTML Graph 架构建议
 
-> 范围已调整：本文保留为此前图谱研究。当前只处理 HTML 的 frontmatter / Properties，不依赖第三方 HTML 插件，以 [当前属性架构](frontmatter-architecture.md) 为准。
+> 范围已调整：本文保留为此前图谱研究。当前只处理 HTML 的 frontmatter / Properties，不依赖第三方 HTML 插件，以 [当前属性架构](../../frontmatter-architecture.md) 为准。
 
-调研日期：2026-10-15。状态：本文的图谱方案只有接口证据和离线契约验证，未实现该图谱方案，也未完成真实图谱 UI 验证。当前已实现的单文件属性原型见 [验证记录](prototype-verification.md)。
+调研日期：2026-10-15。状态：本文的图谱方案只有接口证据和离线契约验证，未实现该图谱方案，也未完成真实图谱 UI 验证。当前已实现的单文件属性原型见 [验证记录](../../prototype-verification.md)。
 
 ## 1. 推荐结论
 

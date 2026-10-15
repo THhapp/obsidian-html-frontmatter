@@ -61,6 +61,6 @@ npm run release
 
 输出：`dist/html-frontmatter/` 可直接安装，带版本号的 ZIP 可分发，旁边的 `.sha256` 文件用于校验。[GitHub Release](https://github.com/THhapp/obsidian-html-frontmatter/releases) 同时提供独立 `main.js`、`manifest.json` 和许可文件；不将 `dist/`、`node_modules/` 或测试库提交到源码仓库。
 
-[开发与必要检查](docs/development.md) · [验证记录](docs/prototype-verification.md) · [架构说明](docs/frontmatter-architecture.md) · [更新记录](CHANGELOG.md)
+[文档导航](docs/README.md) · [开发与必要检查](docs/development.md) · [验证记录](docs/prototype-verification.md) · [架构说明](docs/frontmatter-architecture.md) · [更新记录](CHANGELOG.md)
 
 本项目采用 [MIT 许可证](LICENSE)。捆绑依赖的许可证保留在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

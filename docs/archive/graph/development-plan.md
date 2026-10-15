@@ -1,8 +1,8 @@
 # 开发前置与分阶段验证
 
-> 本文为此前图谱路线的验证计划，暂不执行。当前范围调整为 frontmatter / Properties，见 [当前属性架构](frontmatter-architecture.md)。
+> 本文为此前图谱路线的验证计划，暂不执行。当前范围调整为 frontmatter / Properties，见 [当前属性架构](../../frontmatter-architecture.md)。
 
-状态：历史建议计划，不用于描述当前进度。当前属性原型已实现并验证，见 [验证记录](prototype-verification.md)。
+状态：历史建议计划，不用于描述当前进度。当前属性原型已实现并验证，见 [验证记录](../../prototype-verification.md)。
 
 ## 1. 开发前固定的契约
 

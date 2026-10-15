@@ -1,5 +1,7 @@
 # Obsidian 接口与本机证据
 
+> 历史归档：本文记录属性原型开发前的图谱调研，包含当时的第三方阅读器环境。当前产品只适配属性，见 [当前属性架构](../../frontmatter-architecture.md) 和 [验证记录](../../prototype-verification.md)。
+
 调研日期：2026-10-15。目标版本：Obsidian 1.14.4，安装器 1.12.7。
 
 ## 1. 调研范围与证据等级
@@ -125,7 +127,7 @@ npm 元数据在调研时返回：`obsidian 1.14.4`、`parse5 8.0.1`、`typescri
 
 ## 5. 离线验证
 
-工具：[native-graph-contract.cjs](../scripts/research/native-graph-contract.cjs)。结果：[10 个契约用例](research/native-graph-contract-1.14.4.json)。
+工具：[native-graph-contract.cjs](../../../scripts/research/native-graph-contract.cjs)。结果：[10 个契约用例](evidence/native-graph-contract-1.14.4.json)。
 
 脚本读取本机 ASAR，提取原生图谱数据构造器和 `getCache()`，在 Node VM 中执行。所有文件名、元数据、链接、选项与辅助依赖均为合成数据，不访问笔记库。
 
@@ -140,7 +142,7 @@ npm 元数据在调研时返回：`obsidian 1.14.4`、`parse5 8.0.1`、`typescri
 
 **10/10 通过只证明数据消费契约，不证明真实插件接入成功。** 尚未检验事件竞争、UI、点击、重启、卸载、自动改名、筛选、其他补丁或移动端。
 
-运行时存在性记录见 [runtime-capabilities-1.14.4.json](research/runtime-capabilities-1.14.4.json)，复查方式见 [调研工具说明](../scripts/research/README.md)。该记录只保存能力与阅读器信息，不保存个人笔记内容或文件清单。
+运行时存在性记录见 [runtime-capabilities-1.14.4.json](evidence/runtime-capabilities-1.14.4.json)，复查方式见 [调研工具说明](../../../scripts/research/README.md)。该记录只保存能力与阅读器信息，不保存个人笔记内容或文件清单。
 
 ## 6. 工具链与平台前置
 

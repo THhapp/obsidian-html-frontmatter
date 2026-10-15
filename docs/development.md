@@ -34,11 +34,26 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/launch-test-obsidian
 | `npm run test:extended` | 属性类型、输入和文件切换 |
 | `npm run test:catalog` | 全库目录、计数、候选值与全局操作保护 |
 
-真实界面脚本会核对独立库路径，并重置各自的合成样例。只修改文档或打包时，构建并用安装包完成一次属性保存检查即可。具体证据与重启命令见 [验证记录](prototype-verification.md)。
+真实界面脚本会核对独立库路径，并重置各自的合成样例。只修改文档或目录布局时，检查链接与引用即可；调整构建或打包时，再构建并检查安装包，必要时做一次属性保存检查。具体证据与重启命令见 [验证记录](prototype-verification.md)。
 
 从 ZIP 安装到独立测试库并重启该实例后，可运行 `node --experimental-strip-types scripts/e2e/install-smoke.mjs` 检查版本、安装文件一致性和一次原生属性保存。该检查只修改测试样例的标题。
 
-## 结构
+## 目录与生成文件
+
+| 路径 | 内容 | 是否进入 Git |
+| --- | --- | --- |
+| `src/` | 插件运行时代码 | 是 |
+| `tests/` | 存储与兼容层测试、合成样例 | 是 |
+| `scripts/` | 构建打包、独立测试、只读调研工具 | 是 |
+| `docs/` | 当前说明、验证证据、公开演示与历史研究归档 | 是 |
+| `main.js`、`dist/` | 构建产物、手动安装包及校验文件 | 否 |
+| `node_modules/` | 本地依赖 | 否 |
+| `test-vault/` | 合成测试库及其 Obsidian 状态 | 否 |
+| `tmp/` | 独立应用配置、本机辅助脚本、截图和临时结果 | 否 |
+
+根目录保留 README、许可证、版本清单及构建配置，便于 GitHub 与 Obsidian 识别。`THIRD_PARTY_NOTICES.md` 也保留在根目录，由构建配置读取并嵌入 `main.js`，不能因整理目录而移除。
+
+## 源码入口
 
 - `src/metadata.ts`：JSON 数据块解析、校验和精确写回。
 - `src/main.ts`：插件生命周期、面板适配、索引与操作保护。
@@ -46,4 +61,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/launch-test-obsidian
 - `src/compat.ts`：非公开接口边界与可撤销包装。
 - `tests/fixtures/`：可公开的合成样例，不含个人笔记。
 
-历史图谱调研见 [architecture.md](architecture.md)，不作为当前插件功能。其他接口证据保留在 `docs/research/` 与 `scripts/research/`，不打入发布包。
+当前文档入口见 [文档导航](README.md)，工具入口见 [脚本导航](../scripts/README.md)。历史图谱方案与证据在 `docs/archive/graph/`；当前属性证据在 `docs/research/`。调研工具保留在 `scripts/research/`，不打入发布包。
+
+## 发布附件与审核建议
+
+当前发布仍采用本机构建和上传。GitHub Release 同时提供 `main.js`、`manifest.json`、手动安装 ZIP、SHA-256 与许可文件；Obsidian 只下载支持的插件文件。ZIP 和独立许可是面向手动安装用户的附件，源码仓库中的文档归档不会改变这项提示。许可证同时嵌入 `main.js`，社区安装也能保留完整声明。
+
+如要简化后续 Release，可只上传 `main.js` 与 `manifest.json`，同时将 README 的手动安装说明调整为下载这两个文件。不要移除源码许可证或已嵌入的依赖声明；也不要静默删除已发布版本的附件。
+
+产物来源证明需要让 GitHub Actions 从对应提交构建，再对实际发布的 `main.js` 生成 attestation。本机 SHA-256 只能校验内容，不能替代构建来源证明。当前仓库尚未接入该流程，目录整理不会消除这项 Recommendation。[GitHub 官方说明](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations)
+
+全库枚举用于发现 HTML 并维护属性目录与计数，是现有功能的必要行为。相关接入见 `src/main.ts` 与 `src/property-catalog.ts`，不为消除枚举提示而删掉全库统计。具体审核结果以新扫描为准；[Obsidian 官方审核说明](https://docs.obsidian.md/community-directory/manage-entry) 区分 Error、Warning、Recommendation 与 Pass。
