@@ -1,0 +1,56 @@
+{
+  "inspectedBundle": "obsidian-1.14.4.asar",
+  "appJsSha256": "958ce57fe22f87fdf121546e46dfccd9c8ee971ce3fd8f801d60d4ece39a2df9",
+  "extractionOffsets": {
+    "graphBuilder": 2733288,
+    "getCache": 1752468
+  },
+  "result": "10/10 passed",
+  "cases": [
+    {
+      "name": "Native getCache ignores stored HTML metadata",
+      "passed": true
+    },
+    {
+      "name": "Native getCache retains Markdown metadata",
+      "passed": true
+    },
+    {
+      "name": "Scoped overlay can expose HTML metadata without changing Markdown",
+      "passed": true
+    },
+    {
+      "name": "Native graph accepts Markdown-to-HTML edges with attachments enabled",
+      "passed": true
+    },
+    {
+      "name": "HTML metadata alone does not generate HTML-to-HTML edges",
+      "passed": true
+    },
+    {
+      "name": "Resolved HTML edges are consumed by the unmodified native graph builder",
+      "passed": true
+    },
+    {
+      "name": "Resolved edges alone do not expose HTML tag edges",
+      "passed": true
+    },
+    {
+      "name": "HTML metadata overlay supplies tag nodes and tag edges",
+      "passed": true
+    },
+    {
+      "name": "Disabling attachments excludes HTML nodes and incoming HTML edges",
+      "passed": true
+    },
+    {
+      "name": "Disabling tags leaves file edges intact and removes tag nodes",
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Offline execution of two extracted native functions with synthetic inputs and mocked helpers.",
+    "Not an installed plugin, live cache injection, graph UI test, or mobile compatibility test.",
+    "Lifecycle, rename rewriting, graph filters and compatibility with other patches remain unverified."
+  ]
+}

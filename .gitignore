@@ -1,0 +1,28 @@
+# Dependencies and generated build output
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+/main.js
+/main.js.map
+
+# Local test vaults and temporary output
+test-vault/
+test-vaults/
+.obsidian/
+tmp/
+temp/
+*.log
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+
+# Editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini

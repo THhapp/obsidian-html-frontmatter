@@ -1,0 +1,60 @@
+# HTML Frontmatter
+
+让 HTML 笔记使用 Obsidian 原生 Properties：编辑属性、查看全库属性目录与统计。属性保存在 HTML 自身的 JSON 数据块中，不生成辅助 Markdown，也不依赖第三方 HTML 插件。
+
+**0.1.0 试用版 · 仅支持桌面 Obsidian 1.14.4，已在 Windows 验证。**
+
+## 功能
+
+- 通过原生文件属性侧栏编辑文本、列表、数字、复选框、日期、日期时间和标签。
+- 支持单文件属性新增、改名、删除；保存时保留 JSON 数据块之外的正文、样式和脚本。
+- HTML、HTM 与 Markdown 的属性合并进入原生全库目录、出现次数和候选值读取。
+- 文件修改、移动、删除或排除规则变化后刷新目录；类型选择在重启后保留。
+
+![原生全库属性目录，含 HTML 与 Markdown 的合并计数](docs/assets/property-catalog.png)
+
+## 安装与使用
+
+1. 解压 `html-frontmatter-0.1.0.zip`，将其中整个 `html-frontmatter` 文件夹放入目标库的 `.obsidian/plugins/`。
+2. 重启 Obsidian，在“设置 → 社区插件”中启用 **HTML Frontmatter**，并启用核心插件“属性列表”。
+3. 按 `Ctrl/Cmd+P`，运行 **HTML Frontmatter: 编辑 HTML 属性**，选择 `.html/.htm` 文件；也可使用文件右键菜单“编辑 HTML 属性”。
+4. 查看全库目录时，运行内置命令 **属性列表: 显示所有笔记属性**。
+
+无需 Node.js 即可安装构建好的插件。属性侧栏固定到所选文件，正文阅读使用你自己的现有方式。
+
+## 属性如何保存
+
+```html
+<script type="application/json" id="obsidian-frontmatter">
+{
+  "课程": "数据库",
+  "章节": 6,
+  "完成": false,
+  "tags": ["课程/数据库"]
+}
+</script>
+```
+
+通过属性面板编辑即可，无需手工维护 JSON。没有数据块时，首次保存会插入一个块。支持扁平对象及基础值列表；`tags`、`aliases`、`cssclasses` 使用字符串列表。无效、重复或不受支持的数据块会拒绝写入。
+
+## 当前限制
+
+- 使用了部分非公开接口，其他 Obsidian 版本会拒绝加载。
+- 涉及 HTML 的**全局属性改名和删除暂时阻止**，包括原生目录的混合批量删除；单文件面板仍可操作。
+- 不提供 HTML 正文阅读、搜索、图谱、Bases 或反链适配。点击目录项仍进入原生搜索，其结果不承诺包含 HTML。
+- 显式指定过类型的属性可能按原生规则以 0 次保留；日期时间按原生格式补齐秒数。
+
+## 从源码构建
+
+需要 Node.js 24 与 npm；当前打包命令使用 Windows PowerShell。
+
+```powershell
+npm ci --ignore-scripts --no-audit --no-fund
+npm run release
+```
+
+输出：`dist/html-frontmatter/` 可直接安装，`dist/html-frontmatter-0.1.0.zip` 可分发，旁边的 `.sha256` 文件用于校验。GitHub 上传时，源码正常推送；安装包作为 Release 附件上传，不提交 `dist/`、`node_modules/` 或测试库。
+
+[开发与必要检查](docs/development.md) · [验证记录](docs/prototype-verification.md) · [架构说明](docs/frontmatter-architecture.md) · [更新记录](CHANGELOG.md)
+
+项目源码的开源许可证尚未指定。捆绑依赖的许可证保留在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

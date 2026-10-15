@@ -1,0 +1,20 @@
+{
+  "appVersion": "1.14.4",
+  "appJsSha256": "958ce57fe22f87fdf121546e46dfccd9c8ee971ce3fd8f801d60d4ece39a2df9",
+  "propertyViewOffset": 3539233,
+  "evidenceKind": "read-only source guards; no properties UI opened or write executed",
+  "observations": {
+    "nativePropertyViewAcceptsAnyExtension": true,
+    "nativePropertyViewSupportGateIsMarkdownOnly": true,
+    "nativePropertyViewSaveHasMarkdownGate": true,
+    "nativePropertyViewSaveBypassesProcessFrontMatter": true,
+    "nativePropertyViewParsesSourceAsMarkdownFrontmatter": true,
+    "globalPropertyRenameUsesDirectVaultProcess": true
+  },
+  "notVerified": [
+    "HTML metadata storage adapter",
+    "native properties view integration",
+    "native property type and enumeration bridge",
+    "writeback, global operations, unload and restart"
+  ]
+}

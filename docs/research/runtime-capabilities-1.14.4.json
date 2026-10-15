@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "getCache": true,
+    "getFileCache": true,
+    "getTags": true,
+    "getCachedFiles": true,
+    "resolveLinks": true,
+    "queueFileForLinkResolution": true,
+    "iterateAllRefs": true,
+    "iterateRefsForFile": true,
+    "linkUpdaters": true,
+    "nonMarkdownEmptyCacheGuardObserved": true,
+    "resolvedLinksAvailable": true,
+    "unresolvedLinksAvailable": true
+  },
+  "reader": {
+    "htmlViewType": "local-web-page-view",
+    "htmViewType": "local-web-page-view",
+    "installedLocalPageViewerVersion": "0.1.2",
+    "duplicateExtensionGuardObserved": true
+  },
+  "limitations": "Read-only presence/signature probe; no adapter installation, cache injection, graph rendering or rename test."
+}

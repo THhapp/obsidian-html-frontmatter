@@ -1,0 +1,25 @@
+{
+  "name": "obsidian-html-frontmatter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "npm run check && node esbuild.config.mjs",
+    "release": "npm run build && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-release.ps1",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test-vault": "npm run build && node scripts/setup-test-vault.mjs",
+    "test:live": "node --experimental-strip-types scripts/e2e/run.mjs",
+    "test:extended": "node --experimental-strip-types scripts/e2e/extended.mjs",
+    "test:catalog": "node --experimental-strip-types scripts/e2e/catalog.mjs"
+  },
+  "dependencies": {
+    "parse5": "8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.17",
+    "esbuild": "0.28.2",
+    "obsidian": "1.14.4",
+    "typescript": "5.8.3"
+  }
+}
