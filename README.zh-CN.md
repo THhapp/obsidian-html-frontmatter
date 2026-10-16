@@ -33,10 +33,9 @@
 ```html
 <script type="application/json" id="obsidian-frontmatter">
 {
-  "课程": "数据库",
-  "章节": 6,
-  "完成": false,
-  "tags": ["课程/数据库"]
+  "project": "Example",
+  "completed": false,
+  "tags": ["demo/example"]
 }
 </script>
 ```
@@ -51,7 +50,7 @@
 
 - 使用了部分非公开接口，其他 Obsidian 版本会拒绝加载。
 - 涉及 HTML 的**全局属性改名和删除暂时阻止**，包括原生目录的混合批量删除；单文件面板仍可操作。
-- 不提供 HTML 正文阅读、搜索、图谱、Bases 或反链适配。点击目录项仍进入原生搜索，其结果不承诺包含 HTML。
+- tags 字段编辑不等于原生标签侧栏或标签索引已纳入 HTML。不提供 HTML 正文阅读、搜索、图谱、Bases 或反链适配。点击目录项仍进入原生搜索，其结果不承诺包含 HTML。
 - 显式指定过类型的属性可能按原生规则以 0 次保留；日期时间按原生格式补齐秒数。
 
 ## 从源码构建

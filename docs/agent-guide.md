@@ -4,16 +4,16 @@
 
 ## 新建笔记
 
-从 [HTML 模板](../templates/note.html) 复制到任务授权的目标位置，再填写标题、正文和需要的属性。模板只预置空 `tags` 列表，不强制课程、状态或日期等业务字段。
+从 [HTML 模板](../templates/note.html) 复制到任务指定的目标位置，再填写标题、正文和需要的属性。模板只预置空 `tags` 列表，不强制任何业务字段。
 
 属性块推荐放在 `<head>` 内：
 
 ```html
 <script type="application/json" id="obsidian-frontmatter">
 {
-  "课程": "数据库",
-  "完成": false,
-  "tags": ["课程/数据库"]
+  "project": "Example",
+  "completed": false,
+  "tags": ["demo/example"]
 }
 </script>
 ```

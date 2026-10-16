@@ -44,8 +44,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/launch-test-obsidian
 | --- | --- | --- |
 | `src/` | 插件运行时代码 | 是 |
 | `tests/` | 存储与兼容层测试、合成样例 | 是 |
-| `scripts/` | 构建打包、独立测试、只读调研工具 | 是 |
-| `docs/` | 当前说明、验证证据、公开演示与历史研究归档 | 是 |
+| `scripts/` | 构建打包与独立测试 | 是 |
+| `docs/` | 使用约定、架构、验证记录和合成演示 | 是 |
 | `main.js`、`dist/` | 构建产物、手动安装包及校验文件 | 否 |
 | `node_modules/` | 本地依赖 | 否 |
 | `test-vault/` | 合成测试库及其 Obsidian 状态 | 否 |
@@ -61,14 +61,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/launch-test-obsidian
 - `src/compat.ts`：非公开接口边界与可撤销包装。
 - `tests/fixtures/`：可公开的合成样例，不含个人笔记。
 
-当前文档入口见 [文档导航](README.md)，工具入口见 [脚本导航](../scripts/README.md)。历史图谱方案与证据在 `docs/archive/graph/`；当前属性证据在 `docs/research/`。调研工具保留在 `scripts/research/`，不打入发布包。
+当前文档入口见 [文档导航](README.md)，工具入口见 [脚本导航](../scripts/README.md)。属性接口的初始源码检查记录在 `docs/research/`，不打入发布包。
 
-## 发布附件与审核建议
+## 发布附件
 
-当前发布仍采用本机构建和上传。GitHub Release 同时提供 `main.js`、`manifest.json`、手动安装 ZIP、SHA-256 与许可文件；Obsidian 只下载支持的插件文件。ZIP 和独立许可是面向手动安装用户的附件，源码仓库中的文档归档不会改变这项提示。许可证同时嵌入 `main.js`，社区安装也能保留完整声明。
+发布使用本地构建和上传。附件包含 `main.js`、`manifest.json`、手动安装 ZIP、SHA-256 与许可文件；Obsidian 自动安装只下载支持的插件文件，ZIP 和独立许可供手动安装使用。许可证同时嵌入 `main.js`。
 
-如要简化后续 Release，可只上传 `main.js` 与 `manifest.json`，同时将 README 的手动安装说明调整为下载这两个文件。不要移除源码许可证或已嵌入的依赖声明；也不要静默删除已发布版本的附件。
-
-产物来源证明需要让 GitHub Actions 从对应提交构建，再对实际发布的 `main.js` 生成 attestation。本机 SHA-256 只能校验内容，不能替代构建来源证明。当前仓库尚未接入该流程，目录整理不会消除这项 Recommendation。[GitHub 官方说明](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations)
-
-全库枚举用于发现 HTML 并维护属性目录与计数，是现有功能的必要行为。相关接入见 `src/main.ts` 与 `src/property-catalog.ts`，不为消除枚举提示而删掉全库统计。具体审核结果以新扫描为准；[Obsidian 官方审核说明](https://docs.obsidian.md/community-directory/manage-entry) 区分 Error、Warning、Recommendation 与 Pass。
+SHA-256 用于校验内容，不能替代构建来源证明。目前没有生成 GitHub artifact attestations 的工作流。后续若调整附件或构建方式，需同步手动安装说明并保留许可证，不追溯修改已发布附件。

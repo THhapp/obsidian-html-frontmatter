@@ -24,7 +24,7 @@ The GIF uses synthetic notes. The native property editor is on the right; the va
 
 ### Manual installation
 
-Until the plugin is available in Obsidian's community directory, install it manually:
+To install a release manually:
 
 1. Open the [latest GitHub release](https://github.com/THhapp/obsidian-html-frontmatter/releases/latest) and download the `html-frontmatter-<version>.zip` asset.
 2. Extract the ZIP. Copy the entire `html-frontmatter` folder into your vault's `.obsidian/plugins/` directory. The resulting plugin folder must be `.obsidian/plugins/html-frontmatter/`, with `main.js` and `manifest.json` directly inside it.
@@ -56,10 +56,9 @@ There is no need to maintain JSON manually. If a file has no metadata block, sav
 ```html
 <script type="application/json" id="obsidian-frontmatter">
 {
-  "course": "Databases",
-  "chapter": 6,
-  "reviewed": false,
-  "tags": ["course/databases"]
+  "project": "Example",
+  "completed": false,
+  "tags": ["demo/example"]
 }
 </script>
 ```
@@ -74,7 +73,7 @@ File-capable agents can edit the JSON block directly; Obsidian integration requi
 
 - The adapter uses some non-public APIs and refuses to load on Obsidian versions other than 1.14.4.
 - Vault-wide property renaming or deletion involving HTML is blocked, including mixed multi-selections. Single-file property renaming and deletion remain available.
-- HTML rendering, search results, graph links, Bases, and backlinks are outside this plugin's scope. Clicking a catalog entry still invokes native search; its results are not guaranteed to include HTML.
+- Editing the tags field does not integrate HTML with the native tag sidebar or tag index. HTML rendering, search results, graph links, Bases, and backlinks are outside this plugin's scope. Clicking a catalog entry still invokes native search; its results are not guaranteed to include HTML.
 - Explicitly assigned property types may remain in the native catalog with a count of 0. Date-times use Obsidian's native format, including seconds.
 
 ## Build from source
