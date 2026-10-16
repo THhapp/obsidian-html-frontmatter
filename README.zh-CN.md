@@ -43,6 +43,10 @@
 
 通过属性面板编辑即可，无需手工维护 JSON。没有数据块时，首次保存会插入一个块。支持扁平对象及基础值列表；`tags`、`aliases`、`cssclasses` 使用字符串列表。无效、重复或不受支持的数据块会拒绝写入。
 
+## 交给 Agent 使用
+
+能读写文件的 Agent 可直接维护 JSON 数据块，Obsidian 内的属性适配需要启用插件。新建笔记可用 [最小 HTML 模板](templates/note.html)，修改时遵循 [Agent 读写约定](docs/agent-guide.md)，其中包含可直接复制到笔记库 `AGENTS.md` 或任务提示的短约定。数据块标识和字段规则属于本插件约定，当前没有独立 CLI 或 MCP 服务。
+
 ## 当前限制
 
 - 使用了部分非公开接口，其他 Obsidian 版本会拒绝加载。

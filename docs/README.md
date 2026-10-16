@@ -7,6 +7,7 @@
 | 内容 | 入口 |
 | --- | --- |
 | 用户安装与使用 | [English](../README.md) · [简体中文](../README.zh-CN.md) |
+| Agent 创建与修改笔记 | [读写约定](agent-guide.md) · [HTML 模板](../templates/note.html) |
 | 当前设计与接口边界 | [属性架构](frontmatter-architecture.md) |
 | 已验证结果与限制 | [原型验证记录](prototype-verification.md) |
 | 开发、必要检查与发布约定 | [开发说明](development.md) |

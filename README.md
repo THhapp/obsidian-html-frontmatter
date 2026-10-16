@@ -66,6 +66,10 @@ There is no need to maintain JSON manually. If a file has no metadata block, sav
 
 The block is non-executing JSON. Flat objects and lists of primitive values are supported; `tags`, `aliases`, and `cssclasses` must be string lists. Invalid, duplicate, or unsupported metadata blocks are refused rather than overwritten.
 
+### Working with agents
+
+File-capable agents can edit the JSON block directly; Obsidian integration requires the enabled plugin. Start from the [minimal HTML template](templates/note.html) and follow the [agent read/write guide](docs/agent-guide.md) (Simplified Chinese) to preserve surrounding source and handle conflicts. The metadata ID and field rules are this plugin's convention. No dedicated CLI or MCP server is provided.
+
 ## Limitations
 
 - The adapter uses some non-public APIs and refuses to load on Obsidian versions other than 1.14.4.
